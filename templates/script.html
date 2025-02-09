@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+    <label for="fixornot">เปรียบเทียบ - ค่าใช้จ่าย</label>
+                    <select id="fixornot" onchange="toggleFixDiv()">
+                        <option value="no">เลือกที่จะไม่เปรียบเทียบ</option>
+                        <option value="fix">ค่าใช้จ่าย/เดือน (โดยประมาณ)</option>
+                        <option value="notfix">ค่าใช้จ่าย/เดือน (อิสระ)</option>
+                    </select>
+
+                    <div id="fixornot" class="comparison-result-ck">
+                        <div id="fix" style="display: none;">
+                            <h3 style="text-align: center; ">เลือกภูมิภาค:</h3>
+                            <div class="progress-container">
+                                <div class="step-container">
+                                    <div class="step" data-region="กทม. + 3 จังหวัด">1</div>
+                                    <div class="label">กทม.+3จังหวัด</div>
+                                </div>
+                                <div class="line"></div>
+                            
+                                <div class="step-container">
+                                    <div class="step" data-region="ภาคกลาง">2</div>
+                                    <div class="label">ภาคกลาง</div>
+                                </div>
+                                <div class="line"></div>
+                            
+                                <div class="step-container">
+                                    <div class="step" data-region="ภาคตะวันออกเฉียงเหนือ">3</div>
+                                    <div class="label">ภาคอีสาน</div>
+                                </div>
+                                <div class="line"></div>
+                            
+                                <div class="step-container">
+                                    <div class="step" data-region="ภาคใต้">4</div>
+                                    <div class="label">ภาคใต้</div>
+                                </div>
+                                <div class="line"></div>
+                            
+                                <div class="step-container">
+                                    <div class="step" data-region="ภาคเหนือ">5</div>
+                                    <div class="label">ภาคเหนือ</div>
+                                </div>
+                            </div>
+                            <div id="resultdata" class="result-box"> เลือกภูมิภาคเพื่อดูรายละเอียด และคำนวณ</div>
+                        </div>
+
+                        <div id="notfix" style="display: none;">
+                            <p>กรุณากรอกค่าใช้จ่ายที่คุณคาดว่าจะใช้จ่ายต่อเดือน (อิสระ)</p>
+                            <input type="number" id="monthly-expense" placeholder="กรอกค่าใช้จ่าย">
+                        </div>
+                        <div id="no" >
+                            โปรดเช็คให้แน่ใจ ว่าคุณต้องการจะไม่เลือกแล้วจริงๆ
+                        </div>
+                        
+                    </div>
+
+                    <button onclick="calculateSavings()" class="ck-button" >คำนวณ</button>
+                </div>
+
+</body>
+<script>
+    function toggleFixDiv() {
+    var selectValue = document.getElementById('fixornot').value;
+    var fixDiv = document.getElementById('fix');
+    var notFixDiv = document.getElementById('notfix');
+    var noDiv = document.getElementById('no');
+    
+    if (selectValue === 'fix') {
+        fixDiv.style.display = 'block';  // แสดง div สำหรับการเลือกภูมิภาค
+        notFixDiv.style.display = 'none';
+        noDiv.style.display = 'none'; 
+    } else if (selectValue === 'notfix') {
+        notFixDiv.style.display = 'block'; // แสดง div สำหรับกรอกค่าใช้จ่ายอิสระ
+        fixDiv.style.display = 'none'; 
+        noDiv.style.display = 'none';   
+    } else if (selectValue === 'no') {
+        noDiv.style.display =  'block';   // แสดง div สำหรับไม่กรอก
+        notFixDiv.style.display = 'none'; 
+        fixDiv.style.display = 'none';    
+    } else {
+        fixDiv.style.display = 'none';    // ซ่อน div ทั้งหมด
+        notFixDiv.style.display = 'none'; 
+    }
+}
+</script>
+<script>
+    const regionData = {
+    "กทม. + 3 จังหวัด": " กรุงเทพฯ, นนทบุรี, ปทุมธานี, สมุทรปราการ<br>💰 ค่าใช้จ่ายเฉลี่ย: <strong>32,096 บาท/เดือน</strong>",
+    "ภาคกลาง": " จังหวัดในภาคกลาง<br>💰 ค่าใช้จ่ายเฉลี่ย: <strong>24,635 บาท/เดือน</strong>",
+    "ภาคตะวันออกเฉียงเหนือ": " จังหวัดในภาคอีสาน<br>💰 ค่าใช้จ่ายเฉลี่ย: <strong>23,263 บาท/เดือน</strong>",
+    "ภาคใต้": "จังหวัดในภาคใต้<br>💰 ค่าใช้จ่ายเฉลี่ย: <strong>18,676 บาท/เดือน</strong>",
+    "ภาคเหนือ": " มจังหวัดในภาคเหนือ<br>💰 ค่าใช้จ่ายเฉลี่ย: <strong>18,961 บาท/เดือน</strong>"
+};
+
+// ฟังก์ชันเปลี่ยนข้อความและเพิ่มแอนิเมชัน
+function showResult(region) {
+    const resultBox = document.getElementById("resultdata");
+    resultBox.innerHTML = regionData[region];
+
+    // เพิ่มแอนิเมชันให้ข้อความค่อยๆ โผล่ออกมา
+    resultBox.classList.remove("show");
+    setTimeout(() => resultBox.classList.add("show"), 50);
+}
+
+// เพิ่ม Event Listener ให้ปุ่มกด
+document.querySelectorAll('.step').forEach(step => {
+    step.addEventListener('click', function() {
+        document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+        this.classList.add('active');
+        showResult(this.getAttribute("data-region"));
+    });
+});
+</script>
+<script>
+    function calculateSavings() {
+        var selectedRegion = document.querySelector('.step.active');  // ตรวจสอบภูมิภาคที่เลือก
+        var inputExpense = document.getElementById('monthly-expense').value;  // ค่าใช้จ่ายที่กรอกเอง
+        var resultBox = document.getElementById("resultdata");
+
+        // ค่าใช้จ่ายเฉลี่ยของแต่ละภูมิภาค
+        var regionExpenses = {
+            "กทม. + 3 จังหวัด": 32096,
+            "ภาคกลาง": 24635,
+            "ภาคตะวันออกเฉียงเหนือ": 23263,
+            "ภาคใต้": 18676,
+            "ภาคเหนือ": 18961
+        };
+
+        if (selectedRegion) {
+            // หากเลือกภูมิภาค
+            var region = selectedRegion.getAttribute("data-region");
+            var avgExpense = regionExpenses[region];
+            var savings = avgExpense - inputExpense;  // คำนวณการประหยัด (หรือส่วนต่าง)
+
+            resultBox.innerHTML = `ค่าใช้จ่ายเฉลี่ยในภูมิภาค ${region}: ${avgExpense} บาท/เดือน<br>`;
+            resultBox.innerHTML += `ค่าใช้จ่ายของคุณ: ${inputExpense} บาท/เดือน<br>`;
+            resultBox.innerHTML += `คุณจะประหยัดได้: ${savings} บาท/เดือน`;
+        } else if (inputExpense) {
+            // หากกรอกค่าใช้จ่ายอิสระ
+            resultBox.innerHTML = `ค่าใช้จ่ายที่กรอก: ${inputExpense} บาท/เดือน<br>`;
+            resultBox.innerHTML += `กรุณาเลือกภูมิภาคเพื่อเปรียบเทียบค่าใช้จ่าย`;
+        } else {
+            // ไม่มีการเลือกภูมิภาคและไม่กรอกค่าใช้จ่าย
+            resultBox.innerHTML = `กรุณาเลือกภูมิภาคหรือกรอกค่าใช้จ่ายเพื่อคำนวณ`;
+        }
+    }
+</script>
+
+</html>

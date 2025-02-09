@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>การเงินเป็นเรื่องง่ายๆ</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- เชื่อมโยง Bootstrap เวอร์ชัน 4.5.2 หรือ 5.3.0 เท่านั้น -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> 
+    <!-- เชื่อมโยงฟอนต์ Google -->
+    <link rel="icon" type="image/x-icon" href="static/image/1..png">
+    
+
+    <style>
+        /* ตั้งค่าฟอนต์และสีพื้นฐาน */
+        body {
+            font-family: 'Kanit', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+
+        /* ส่วน Hero Section */
+        .hero-section {
+            position: relative;
+            text-align: center;
+            color: white;
+        }
+
+        .hero-section img {
+            width: 100%;
+            height: auto;
+            filter: brightness(100%);
+        }
+
+    
+
+        /* Navbar */
+        .navbar {
+            
+            background-color:  #7d7e35;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            color: white !important;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+
+        .navbar-nav .nav-link {
+            color: white !important;
+            font-size: 1.1rem;
+            padding: 10px 15px;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover {
+            background-color: #004d40;
+            color: #ffeb3b;
+            border-radius: 5px;
+        }
+
+        /* Services Section */
+        .services {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 50px 20px;
+        }
+
+        .service-item {
+            background-color: #FFFFFF;
+            padding: 20px;
+            border-radius: 50px;
+            
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .service-item:hover {
+            transform: translateY(-10px);
+        }
+
+        .service-item h3 {
+            font-size: 24px;
+            margin-bottom: 15px;
+            color: #00695c;
+        }
+
+        .service-item p {
+            font-size: 16px;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #004d40;
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+        
+        }
+
+        .footer p {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+
+        .social-media a {
+            margin: 0 10px;
+            color: white;
+            font-size: 20px;
+        }
+
+        .social-media a:hover {
+            color: #ffeb3b;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+                    .service-item {
+                border-radius: 90px;
+                padding: 15px 10rcap ;
+            }
+
+            .footer p {
+                font-size: 1rem;
+            }
+
+            .social-media a {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark" ">
+        <a class="navbar-brand" href="/" style="font-size: 2rem;">Finance's Simple</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+      
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto"> <!-- ใช้ ml-auto เพื่อจัดเมนูไปทางขวา -->
+            <li class="nav-item active">
+                <a class="nav-link" href="/">หน้าหลัก <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/SavingMoney">Finance</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                คำนวณ
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="right: 0; left: auto; text-align: center; background-color: White; ">
+                <a class="dropdown-item" href="/loan_calculator">ดอกเบี้ยคงที่</a>
+                <a class="dropdown-item" href="/Calculatefloatinginteres">ดอกเบี้ยลอยตัว</a>
+                <a class="dropdown-item" href="#">คำนวณหนี้</a>
+                <a class="dropdown-item" href="/calculateTax">คำนวณภาษี</a>
+                <a class="dropdown-item" href="/monthly-saving">การออม</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/about-US">เกี่ยวกับเรา</a>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link disabled" href="#">Disabled</a>
+            </li>
+            </ul>
+        </div>
+        </nav>
+    
+
+    <!-- ส่วน Hero Section -->
+    <div class="hero-section">
+        <img src="/static/image/ยินดีต้อนรับสู่เว็บไซต์ Finance's Simple (2).png" alt="blackgraw">
+    </div>
+
+    <!-- ส่วน Services Section -->
+    <section class="services" id="cal">
+        <div class="service-item">
+            <h3>วางแผนการออม</h3>
+            <p>คำนวณ/วางแผน (การออมเงิน,เงินเฟ้อ,ค่าใช้จ่าย) ในอนาคตได้ง่ายๆ</p>
+            <a href="/SavingMoney">เยี่ยมชม</a>
+        </div>
+        <div class="service-item">
+            <h3>ดอกเบี้ยลอยตัว</h3>
+            <p>คำนวณ/วางแผน การผ่อน (บ้าน/รถ/บัตรเครดิต) ให้เป็นเรื่องง่าย</p>
+            <a href="/Calculatefloatinginteres">เยี่ยมชม</a>
+        </div>
+        <div class="service-item">
+            <h3>ดอกเบี้ยคงที่</h3>
+            <p>คำนวณ/วางแผน การกู้ยืมเงิน (ในระยะสั้น)</p>
+            <a href="/loan_calculator">เยี่ยมชม</a>
+        </div>
+    </section>
+
+    <!-- ส่วน Footer -->
+    <footer class="footer">
+        <p>© 2024 Finance's Simple. W.Pimpa & T.klinkhachon.</p>
+        <div class="social-media">
+            <a href="/about-US">Facebook</a>
+            <a href="/about-US">Twitter</a>
+            <a href="/about-US">Instagram</a>
+        </div>
+    </footer>
+
+ 
+            <!-- Bootstrap JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.4.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+
+
+</body>
+</html>

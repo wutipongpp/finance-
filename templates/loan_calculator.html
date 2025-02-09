@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>คำนวณดอกเบี้ยคงที่</title>
+    <!-- Bootstrap navbar CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="website icon" type="png" href="">
+    <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="static/image/1..png">
+ 
+</head>
+
+
+<style>   
+   body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, ;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #fb7e70, #f6c16c);
+            color: #333;
+            transition: background 0.5s ease;
+        }
+
+         /* Navbar */
+        .navbar {
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            color: white !important;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+        .nav-link.nav-item{
+            font-weight: bold;
+        }
+        
+        .navbar-nav .nav-link {
+            color: white !important;
+            font-size: 1.1rem;
+            padding: 10px 15px;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover {
+            background-color: #cf4111;
+            color: #ffeb3b;
+            border-radius: 5px;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            transition: transform 0.5s ease;
+        }
+        .container:hover {
+            transform: scale(1.01);
+        }
+        .left, .right {
+            
+            flex: 1;
+            padding: 20px;
+        }
+        .left {
+            border-right: 2px solid #ddd;
+        }
+        .container-p{
+            text-align: center;
+            font-weight: bolder;
+            
+        }
+        .container-h2 {
+            text-align: center;
+            padding: 2px;
+            color: #f66f3e;
+            font-size: 2.5em;
+            font-weight: bolder;
+            text-shadow: 5px 5px 4px rgba(197, 101, 101, 0.326);
+        }
+        .container-h1 {
+            text-align: center;
+            padding: 2px;
+            color: #f66f3e;
+            font-size: 4em;
+            font-weight: bolder;
+            text-shadow: 5px 5px 4px rgba(197, 101, 101, 0.326);
+        }
+        label {
+            
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        input, select, button {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
+        input:focus, select:focus, button:focus {
+            outline: none;
+            border-color: #e74c3c;
+        }
+        button {
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            font-weight: bolder;
+            cursor: pointer;
+            font-size: 18px;
+            transition: background-color 0.3s, transform 0.2s ease;
+        }
+        button:hover {
+            background-color: #c0392b;
+            transform: scale(1.03);
+        }
+        .comparison-result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border: 1px solid #ffecec;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+        .comparison-result:hover {
+            background-color: #f3eceb;
+            
+        }
+        .chart-container {
+            margin-top: 20px;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease;
+        }
+        .chart-container:hover {
+            box-shadow: 0 4px 20px rgba(0, 0, 0.1, 0.2);
+        }
+        
+        img {
+            max-width: 100%;
+            height: 0.1 ;
+            
+        }
+        @media (min-width: 768px) {
+            .container-h1 {
+            text-align: center;
+            padding: 2px;
+            color: #f66f3e;
+            font-size: 3em;
+            font-weight: bolder;
+            text-shadow: 5px 5px 4px rgba(197, 101, 101, 0.326);
+        }
+                .container {
+            flex-direction: row;
+            }
+            img {
+            border-radius: 15px;
+            max-width: auto;
+            height: 0.1 ;
+            
+        }
+        }
+        @media (max-width: 767px) {
+            .container-h1 {
+            text-align: center;
+            padding: 2px;
+            color: #f66f3e;
+            font-size: 4em;
+            font-weight: bolder;
+            text-shadow: 5px 5px 4px rgba(197, 101, 101, 0.326);
+        }
+            .container {
+        flex-direction: column;
+        }
+            img {
+            border-radius: 15px;
+            max-width: auto;
+            height: 0.1 ;
+            
+            
+        }
+        }
+
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 10px;
+            background: linear-gradient(to right, #ce4435, #d99425);
+            color: #fff;
+            margin-top: 20px;
+        }
+        
+</style>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(to right, #ce4435, #d99425);">
+        <a class="navbar-brand" href="/" style="font-size: 2rem;font-weight: bold;">Finance's Simple</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+      
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ml-auto"> <!-- ใช้ ml-auto เพื่อจัดเมนูไปทางขวา -->
+            <li class="nav-item active">
+                <a class="nav-link"  href="/">หน้าหลัก <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/SavingMoney">Finance</a>
+            </li>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                คำนวณ
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="right: 0; left: auto; text-align: center; background-color: White; ">
+                <a class="dropdown-item" href="/loan_calculator">ดอกเบี้ยคงที่</a>
+                <a class="dropdown-item" href="/Calculatefloatinginteres">ดอกเบี้ยลอยตัว</a>
+                <a class="dropdown-item" href="#">คำนวณหนี้</a>
+                <a class="dropdown-item" href="/calculateTax">คำนวณภาษี</a>
+                <a class="dropdown-item" href="/monthly-saving">การออม</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/about-US">เกี่ยวกับเรา</a>
+                </div>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link disabled" href="#">Disabled</a>
+            </li>
+            </ul>
+        </div>
+        </nav>
+    
+    <main>
+        <!-- ส่วนฟอร์มกรอกข้อมูล -->
+        <section class="container">
+        <section class="left" >            
+            <form id="loanForm">
+                <h1 class="container-h1"> เงื่อนไขการกู้ยืม </h1>
+                <div class="form-group">                   
+                        <!-- Form Section -->
+                <form id="loanForm">
+                    <div class="mb-3">
+                        <label for="housePrice" class="form-label">เงินกู้ รถ/บ้าน (บาท):</label>
+                        <input type="text" id="housePrice" class="form-control" placeholder="กรุณากรอกเงินกู้"  value inputmode="numeric" oninput="formatNumber(this)" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="downPayment" class="form-label">เงินดาวน์ (%):</label>
+                        <input type="number" id="downPayment" class="form-control" min="0" placeholder="เงินดาวน์ (เปอร์เซ็นต์)" oninput="validateDecimalInput(this, 0, 100)" >
+                    </div>
+                    <div class="mb-3">
+                        <label for="loanYears" class="form-label">จำนวนปีที่กู้:</label>
+                        <input type="number" id="loanYears" class="form-control" min="0" placeholder="จำนวนปีที่กู้" required>
+                    </div>
+                    <div  class="mb-3">
+                        <label for="fixedInterest" class="form-label">อัตราดอกเบี้ยคงที่ (%):</label>
+                        <input type="number" id="fixedInterest" class="form-control" min="0" placeholder="กรอกอัตราดอกเบี้ยคงที่">
+                    </div>
+                    <button type="button" id="calculateButton" class="button" >คำนวณ</button>
+            
+            </form>
+        </section>
+
+        <!-- ส่วนแสดงผลลัพธ์ -->
+        <section id="results" class="right "  >
+            <h2 class="container-h2">ผลลัพธ์การคำนวณ</h2>
+            <div class="container-p">
+                <p>เงินกู้ รถ/บ้าน: <span id="housePriceDisplay"></span> บาท</p>
+                <p>เงินดาวน์: <span id="downPaymentDisplay"></span> บาท</p>
+                <p>เงินต้นรวมดอกทั้งหมด: <span id="Interestconsolidationloan"></span> บาท</p>
+                <p>เป็นเงินต้น: <span id="loanPrincipal"></span> บาท</p>
+                <p>เป็นดอก: <span id="totalinterestDisplay"></span> บาท</p>
+                <p>จำนวนปีที่กู้: <span id="loanYearsDisplay"></span> ปี</p>
+                <p>ผ่อนต่อเดือน (เฉลี่ย): <span id="monthlyPayment"></span> บาท</p>
+            </div>
+            <div class="dropdown-divider"></div>
+            <div id="charts" class="container-h1" style="display: none;">
+                <h3>แผนภูมิเงินกู้รวม(บาท)</h3>
+                <canvas id="paymentChart" ></canvas>
+            </div>
+        </section>
+    </section>
+        
+    </main>
+    <footer>
+        <p>© 2024 คำนวณดอกเบี้ยคงที่</p>
+    </footer>
+
+    <script>
+        function validateDecimalInput(input, min, max) {
+                let value = parseInt(input.value);
+                
+                if (isNaN(value)) {
+                    input.value = "";
+                    return;
+                }
+
+                if (value < min) {
+                    input.value = min;
+                } else if (value > max) {
+                    input.value = max;
+                }
+            }
+
+        function formatNumber(input) {
+      let value = input.value.replace(/,/g, ''); // Remove commas
+        if (!isNaN(value)) {
+        input.value = Number(value).toLocaleString(); // Add commas
+        }
+    }
+        document.addEventListener("DOMContentLoaded", () => {
+            const housePriceInput = document.getElementById("housePrice");
+            const housePriceDisplay = document.getElementById("housePriceDisplay");
+            const downPaymentDisplay = document.getElementById("downPaymentDisplay");
+            const loanPrincipalDisplay = document.getElementById("loanPrincipal");
+            const loanYearsDisplay = document.getElementById("loanYearsDisplay");
+            const monthlyPaymentDisplay = document.getElementById("monthlyPayment");
+            const totalinterestDisplay = document.getElementById("totalinterestDisplay");
+            const InterestconsolidationloanDisplay = document.getElementById("Interestconsolidationloan");
+            const paymentChart = document.getElementById("paymentChart").getContext("2d");
+            
+            
+
+            document.getElementById("calculateButton").addEventListener("click", () => {
+                // ดึงค่าจากฟอร์ม
+                    //ราคาบ้าน
+                const housePrice = parseFloat(housePriceInput.value.replace(/,/g, "")); // เอาลูกน้ำออกก่อนคำนวณ
+                    //เงินดาวน์(%)
+                const downPaymentPercent = parseFloat(document.getElementById("downPayment").value);
+                    //จำนวณปี
+                const loanYears = parseInt(document.getElementById("loanYears").value);
+                    //ดอกเบี้ยคงที่
+                const fixedInterest = parseFloat(document.getElementById("fixedInterest").value) / 100;
+    
+                // ตรวจสอบข้อมูล
+                if (isNaN(housePrice)  || isNaN(loanYears) || isNaN(fixedInterest)) {
+                    alert("กรุณากรอกข้อมูลให้ครบถ้วน");
+                    return;
+                }
+    
+                // คำนวณ
+                        //เงินกู้ต้น = ราคาบ้าน-(ราคาบ้าน*เงินดาว(%)/100)
+                const loanPrincipal = housePrice - (housePrice * downPaymentPercent / 100);
+                        //งวดทั้งหมด = จำนวณปี*12
+                const totalMonths = loanYears * 12;
+                        //ดอกเบี้ยรวม = เงินกู้ต้น*ดอกเบี้ยคงที่*จำนวณปี
+                const totalInterest = loanPrincipal * fixedInterest * loanYears;
+                        //เงินต้นรวมดอกเบี้ย = เงินกู้ต้น+ดอกเบี้ยรวม
+                const Interestconsolidationloan = loanPrincipal + totalInterest;
+                        //เงินที่ต้ิงจ่ายต่อเดือน = เงินต้นรวมดอกเบี้ย/งวดทั้งหมด
+                const monthlyPayment = Interestconsolidationloan / totalMonths;
+    
+                // อัปเดตผลลัพธ์ใน HTML
+                housePriceDisplay.textContent = housePrice.toLocaleString();
+                downPaymentDisplay.textContent = (housePrice * downPaymentPercent / 100).toLocaleString();
+                loanPrincipalDisplay.textContent = loanPrincipal.toLocaleString();
+                loanYearsDisplay.textContent = loanYears;
+                totalinterestDisplay.textContent = totalInterest.toLocaleString();
+                InterestconsolidationloanDisplay.textContent = Interestconsolidationloan.toLocaleString();
+                monthlyPaymentDisplay.textContent = monthlyPayment.toLocaleString();
+                
+                document.getElementById('charts').style.display = 'block';
+                // สร้างกราฟวงกลม
+                new Chart(paymentChart, {
+                    type: 'pie',
+                    data: {
+                        labels: ['เงินต้น', 'ดอกเบี้ย'],
+                        datasets: [{
+                            data: [loanPrincipal, totalInterest],
+                            backgroundColor: ['#36A2EB', '#FF6384'],
+                            hoverOffset: 35
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        
+                        plugins: {
+                            legend: {
+                                position: 'top',
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(tooltipItem) {
+                                        return tooltipItem.label + ': ' + tooltipItem.raw.toLocaleString() + ' บาท';
+                                    }
+                                }
+                            }
+                        }
+                    }
+                
+                });
+                
+            });
+        });
+    </script>
+    
+        
+        
+        
+
+    
+           <!-- Bootstrap JS, Popper.js, and jQuery -->
+           <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+           <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.4.4/dist/umd/popper.min.js"></script>
+           <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+           <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+           <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

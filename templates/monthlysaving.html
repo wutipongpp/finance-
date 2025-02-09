@@ -1,0 +1,1163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>การออมเงิน</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- เชื่อมโยง Bootstrap เวอร์ชัน 4.5.2 หรือ 5.3.0 เท่านั้น -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"> 
+    <!-- เชื่อมโยงฟอนต์ Google -->
+    <link rel="icon" type="image/x-icon" href="static/image/1..png">
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script> 
+
+
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, ;
+            margin: 0;
+            padding: 0;
+            
+            background: linear-gradient(to right, #fb7e70, #f6c16c);
+            color: #380e0ec8;
+            transition: background 0.5s ease;
+        }
+
+
+         /* Navbar */
+        .navbar {
+            min-width: 475px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar-brand {
+            color: white !important;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+        .nav-link.nav-item{
+            font-weight: bold;
+        }
+        
+        .navbar-nav .nav-link {
+            color: white !important;
+            font-size: 1.1rem;
+            padding: 10px 15px;
+            transition: all 0.3s ease;
+        }
+
+        .navbar-nav .nav-link:hover {
+            background-color: #cf4111;
+            color: #ffeb3b;
+            border-radius: 5px;
+        }
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            min-width: 475px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            transition: transform 0.5s ease;
+        }
+        .container:hover {
+            transform: scale(1.01);
+        }
+        .left, .right {
+            align-items: center;
+            flex: 1;
+            padding: 20px;
+        }
+        .left {
+            
+            border-right: 2px solid #ddd;
+        }
+        
+        h3 {
+            text-align: center;
+            padding: 2px;
+            color: #f66f3e;
+            font-size: 2em;
+            font-weight: bolder;
+            text-shadow: 5px 5px 4px rgba(238, 151, 151, 0.326);
+        }
+
+        .container-h1 {
+            text-align: center;
+            padding: 2px;
+            color: #f66f3e;
+            font-size: 4em;
+            font-weight: bolder;
+            text-shadow: 5px 5px 4px rgba(197, 101, 101, 0.326);
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+        input, select, button {
+            
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        input[type="number"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+        }
+        input:focus, select:focus, button:focus {
+            outline: none;
+            border-color: #e74c3c;
+        }
+
+        .progress-wrapper {
+            justify-content: center;
+            block-size: 100%;
+            grid-auto-flow: column;
+            grid-auto-columns: 100%;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .progress-container {
+            
+            display: flex;
+            align-items: center;
+            overflow-x: scroll; /* ทำให้เลื่อนได้ */
+            padding: 5px 0; /* ลด padding ด้านบนและล่าง */
+
+        }
+
+        .step-container {
+
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex-shrink: 0;
+            margin: 0 8px; /* ลดระยะห่าง */
+        }
+                /* สไตล์แสดงผลข้อมูล */
+        .result-box {
+            margin-top: 20px;
+            background: #fff3e0;
+            border-left: 40px solid #ff9800;
+            font-size: 18px;
+            color: #333;
+            text-align: center;
+            transition: all 0.3s ease-in-out;
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+        #resultdata {
+            
+            text-align: center;
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #1c741f;
+            }
+        /* แสดงผลพร้อมแอนิเมชัน */
+        .result-box.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .step {
+            width: 35px; /* ลดขนาด */
+            height: 35px; /* ลดขนาด */
+            border-radius: 50%;
+            background-color: #b77a2b;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.4s ease;
+        }
+
+        .step:hover {
+            background-color: #45a049;
+            transform: scale(1.3); /* ขยายเล็กน้อย */
+            box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.3); /* เพิ่มเงา */
+        }
+
+        .step.active {
+            background-color: #f6f6f6; /* สีส้ม */
+            box-shadow: 0px 0px 10px rgba(255, 152, 0, 0.5); /* เพิ่มเงาส้ม */
+            transform: scale(1.3);
+            color: #b77a2b;
+        }
+
+        .line {
+            width: 40px; 
+            height: 2px;
+            border-bottom: 2px dashed rgb(206, 203, 203);
+            padding-inline-start: auto;
+            flex-shrink: 0;
+        }       
+
+            .label {
+            margin-top: 10%;
+            margin-left: 2px;
+            font-size: 16px;
+            }
+
+            .comparison-result-container {
+                display: flex;
+                gap: 10px; /* กำหนดระยะห่างระหว่างปุ่ม */
+            }
+
+            .comparison-result-ck {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border: 1px solid #ffecec;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+        .comparison-result-ck:hover {
+            background-color: #f3eceb;
+            
+        }
+        .comparison-result-ck-black{
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f3f2f2;
+            border-radius: 15px;
+            transition: background-color 0.3s ease;
+        
+        }
+        .comparison-result-ck-black:hover {
+            background-color: #f3eceb;
+            
+        }
+
+        .ck-button {
+            background-color: #e74c3c;
+            color: white;
+            margin-top: 20px;
+            border: none;
+            font-weight: bolder;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.4s ease;
+        }
+        .ck-button:hover {
+            background-color: #c0392b;
+            transform: scale(1.03);
+        }
+        .comparison-result {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border: 1px solid #ffecec;
+            border-radius: 8px;
+            transition: background-color 0.3s ease;
+        }
+        .comparison-result:hover {
+            background-color: #f3eceb;
+            
+        }
+        .comparison-result-black{
+            font-weight: bold;
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #ffffff;
+            border-radius: 15px;
+            transition: background-color 0.3s ease;
+        
+        }
+        .comparison-result-black:hover {
+            background-color: #f3eceb;
+            
+        }
+        .tab-container {
+            margin-top: 20px;
+            text-align: center;
+            
+        }
+        .tab {
+            display: inline-block;
+            padding: 14px 30px;
+            margin-right: 5px;
+            margin-left: 5px;
+            margin-top: 12px;
+            cursor: pointer;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 20px;
+            color: #e74c3c;
+            font-weight: bolder;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        .tab.active {
+            background-color: #e74c3c;
+            color: white;
+            transform: scale(1.1);
+        }
+        .tab:hover {
+            background-color: #f39c12;
+            color: white;
+            
+        }
+        .tab-content {
+            display: none;
+            margin-top: 20px;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .chart-container {
+            max-width: auto;
+            margin-top: 20px;
+            background-color: #f9f9f9;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s ease;
+        }
+        .chart-container:hover {
+            box-shadow: 0 4px 20px rgba(0, 0, 0.1, 0.2);
+        }
+            .colum-yearss label {
+                flex-direction: row;
+                margin-right: 40px; 
+                margin-bottom: 0px; /* เพิ่ม margin ด้านล่างระหว่าง label กับ input */
+                margin-top: -10px;
+                margin-left: auto;
+            }
+            .colum-yearss input {
+            margin-top: -5px;
+            padding: auto;;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1.5px solid #ccc; /* กรอบรอบๆ ช่องกรอก */
+            transition: all 0.3s ease-in-out;
+        }
+
+        .colum-yearss {
+            display: flex;
+            flex-direction: row; /* ปกติจัดให้เป็นแถว */
+            gap: 15px;
+            align-items: center;
+            padding: 10px;
+            border-radius: 10px;
+            background-color: #ffffff; /* พื้นหลังสีอ่อน */
+        }       
+        .colum-yearss input:focus {
+            border-color: #dd4928; /* สีกรอบเมื่อคลิก */
+            outline: none; /* เอาขีดเส้นรอบๆ ออกเมื่อคลิก */
+        }
+
+        .colum-yearss input::placeholder {
+            color: #888; /* สีข้อความ placeholder */
+        }
+        
+
+        
+        img {
+            max-width: 100%;
+            height: 0.1 ;
+            
+        }
+        /* regionData */
+        .text-center { text-align: center; }
+        .text-mini { font-size: 15px; }
+        .bold { font-weight: bold ;color: purple; }
+        .big-text { font-size: 22px; }
+        .text-red { color: red; }
+        .text-blue { color: red; }
+        .text-green { color: red; }
+        .text-orange { color: red; }
+        .text-purple { color: red; }
+
+    </style>
+    <style>
+                @media (max-width: 600px) {
+                    body {
+                    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif, ;
+                    margin: 0;
+                    padding: 0;
+                    background: linear-gradient(to right, #fb7e70, #f6c16c, );
+                    background-size:600px;
+                    color: #380e0ec8;
+                    transition: background 0.5s ease;
+                }
+                    .colum-yearss label {
+                        flex-direction: row;
+                        margin-right: 30px; 
+                        margin-bottom: 0px; 
+                        margin-top: -10px;
+                        margin-left: auto;
+                    }
+                    .left {
+                        border-right: 0px solid #ddd;
+                    }
+                    .left, .right {
+                    flex-direction: column;
+                    align-items: center;
+                    max-width: 450px;
+                    flex: 1;
+                    padding: auto;
+                }
+                    .container {
+                    
+                    display: flex;
+                    flex-wrap: wrap;
+                    max-width: 1200px;
+                    min-width: 475px;
+                    margin: 20px auto;
+                    background-color: #fff;
+                    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+                    border-radius: 15px;
+                    transition: transform 0.5s ease;
+                }
+                    .progress-wrapper {
+                block-size: 100%;
+                align-items: center;
+                width: 100%; /* เปลี่ยนจาก 50% เป็น 100% */
+                display: flex;
+                justify-content: center;
+            }
+
+            .progress-container {
+                display: flex;
+                align-content: center;
+                align-items: center;
+                overflow-x: auto;  /* ใช้ auto เพื่อให้เลื่อนได้ */
+                padding: 10px 0;
+                width: 90%;  /* ทำให้เต็มพื้นที่ */
+                max-width: 90%;  /* ป้องกันไม่ให้ขยายเกิน */
+                box-sizing: border-box;  /* คำนวณ padding เป็นส่วนหนึ่งของขนาด */
+            }
+
+            .step-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                flex-shrink: 0;
+                margin: 0 8px;
+                
+                width: auto;  /* ให้ความยืดหยุ่น */
+            }
+
+            .result-box {
+                margin-top: 20px;
+                padding: 1px;
+                background: #fff3e0;
+                border-left: 5px solid #ff9800;
+                font-size: 18px;
+                font-weight: bold;
+                color: #333;
+                text-align: center;
+                transition: all 0.3s ease-in-out;
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            #resultdata {
+                text-align: center;
+                margin-top: 20px;
+                font-size: 18px;
+                font-weight: bold;
+                color: #1c741f;
+            }
+            .line-hr{
+                margin-top: 5px; 
+                border: 1.6px solid #9e9d9d;
+            }
+            
+            .container-h1 {
+            text-align: center;
+            padding: 2px;
+            color: #f66f3e;
+            font-size: 4em;
+            font-weight: bolder;
+            text-shadow: 5px 5px 4px rgba(197, 101, 101, 0.326);
+        }
+            .container {
+        flex-direction: column;
+        }
+            img {
+            border-radius: 15px;
+            max-width: auto;
+            height: 0.1 ;
+            
+            
+        }
+        }
+    
+    
+
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(to right, #e74c3c, #f39c12);">
+    <a class="navbar-brand" href="/" style="font-size: 2rem;font-weight: bold;">Finance's Simple</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto"> <!-- ใช้ ml-auto เพื่อจัดเมนูไปทางขวา -->
+        <li class="nav-item active">
+            <a class="nav-link"  href="/">หน้าหลัก <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" href="/SavingMoney">Finance</a>
+        </li>
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            คำนวณ
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown" style="right: 0; left: auto; text-align: center; background-color: White; ">
+            <a class="dropdown-item" href="/loan_calculator">ดอกเบี้ยคงที่</a>
+            <a class="dropdown-item" href="/Calculatefloatinginteres">ดอกเบี้ยลอยตัว</a>
+            <a class="dropdown-item" href="#">คำนวณหนี้</a>
+            <a class="dropdown-item" href="/calculateTax">คำนวณภาษี</a>
+            <a class="dropdown-item" href="/monthly-saving">การออม</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="/about-US">เกี่ยวกับเรา</a>
+            </div>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link disabled" href="#">Disabled</a>
+        </li>
+        </ul>
+    </div>
+    </nav>
+
+    
+        <div class="container">
+        
+                <div class="left">
+                    <h1 class="container-h1">การออมเงิน</h1>
+                    <label for="monthlySavings">เงินที่ออมต่อเดือน (บาท)</label>
+                    <input type="text" id="monthlySavings" placeholder="เช่น 5,000" min="0" oninput="formatNumber(this)">
+                    <div class="colum-yearss">
+                        <label >เริ่มออม (อายุ/ปีที่)</label>
+                        <label >เกษียณ(อายุ/ปีที่)</label>
+                    </div>
+                    <div class="colum-yearss">
+                        <label for="yearsfrist" style="display: none;">เริ่มออม</label>
+                        <input type="number" id="yearsfrist"  placeholder="สูงสุด 99 ปี" oninput="validateDecimalInput(this, 0, 99)" >
+                        <label for="yearsremain" style="display: none;">สิ้นสุดปีที่</label>
+                        <input type="number" id="yearsremain"  placeholder="สูงสุด 99 ปี"  oninput="validateYearsRemain(this)" >
+                    </div>
+                    <label style="margin-top: -5px;" for="interestRate">อัตราดอกเบี้ยธนาคารต่อปี (%)</label>
+                    <input type="number" id="interestRate"  placeholder="ไม่เกิน 5 เปอร์เซ็นต์"   step="0.01"   >
+
+                    <label for="inflationRate">อัตราเงินเฟ้อเฉลี่ยต่อปี (%)</label>
+                    <input type="number" id="inflationRate"  placeholder="ไม่เกิน 5.00 เปอร์เซ็นต์"  step="0.01" >
+
+                    <label for="fixornot">เปรียบเทียบ - ค่าใช้จ่าย</label>
+                    <select id="fixornot" onchange="toggleFixDiv()">
+                        <option value="no">เลือกที่จะไม่เปรียบเทียบ</option>
+                        <option value="fix">ค่าใช้จ่ายต่อครัวเรือน บาท/เดือน (โดยประมาณ)</option>
+                        <option value="notfix">ค่าใช้จ่าย/เดือน (อิสระ)</option>
+                    </select>
+
+                    <div id="fixornot" class="comparison-result-ck">
+                        <div id="fix" style="display: none;">
+                            <h3 style="text-align: center; ">เลือกภูมิภาค:</h3>
+                            <div class="progress-container">
+                                <div class="step-container" >
+                                    <div class="step" data-region="กทม. + 3 จังหวัด">1</div>
+                                    <div class="label">กรุงเทพ และ 3 จังหวัด</div>
+                                </div>
+                                <div class="line"></div>
+                            
+                                <div class="step-container">
+                                    <div class="step" data-region="ภาคกลาง">2</div>
+                                    <div class="label">ภาคกลาง</div>
+                                </div>
+                                <div class="line"></div>
+                            
+                                <div class="step-container">
+                                    <div class="step" data-region="ภาคอีสาน">3</div>
+                                    <div class="label">ภาคอีสาน</div>
+                                </div>
+                                <div class="line"></div>
+                            
+                                <div class="step-container">
+                                    <div class="step" data-region="ภาคใต้">4</div>
+                                    <div class="label">ภาคใต้</div>
+                                </div>
+                                <div class="line"></div>
+                            
+                                <div class="step-container">
+                                    <div class="step" data-region="ภาคเหนือ">5</div>
+                                    <div class="label">ภาคเหนือ</div>
+                                </div>
+                            </div>
+                            <div id="resultdata" class="result-box"> เลือกภูมิภาคเพื่อดูรายละเอียด และคำนวณ</div>
+                        </div>
+
+                        <div id="notfix" style="display: none;">
+                            <p>กรุณากรอกค่าใช้จ่ายที่คุณคาดว่าจะใช้จ่ายต่อเดือน (อิสระ)</p>
+                            <input type="number" id="monthly-expense" placeholder="กรอกค่าใช้จ่าย">
+                        </div>
+                        <div id="no" >
+                            โปรดเช็คให้แน่ใจ ว่าคุณต้องการจะไม่เลือกแล้วจริงๆ
+                        </div>
+                        
+                    </div>
+
+                    <button onclick="calculateSavings()" class="ck-button" >คำนวณ</button>
+                </div>
+
+                <hr class="line-hr">
+
+                <div class="right">
+                    <div class="tab-container">
+                        <div class="tab active" onclick="showTab('comparison')">เปรียบเทียบอาหาร</div>
+                        <div class="tab" onclick="showTab('items')">ผลสำรวจค่าใช้จ่าย</div>
+                    </div>
+
+                    <div id="comparison" class="tab-content active">
+                        <label for="comparison">เปรียบเทียบกับ</label>
+                        <select id="comparisonSelect">
+                            <option value="meal">อาหาร 1 มื้อ (บาท)</option>
+                            <option value="coffee">กาแฟ 1 แก้ว (บาท)</option>
+                            <option value="movie">ตั๋วหนัง 1 ใบ (บาท)</option>
+                            <option value="boxRice">ข้าวกล่อง 1 กล่อง (บาท)</option>
+                            <option value="soda">น้ำอัดลม 1 ขวด (บาท)</option>
+                        </select>
+                        <label for="comparisonUnitimput">ราคาอาหาร</label>
+                        <input type="text" id="comparisonUnitimput"  placeholder="เช่น 50 " oninput="formatNumber(this)" >
+                        <div id="result" class="comparison-result" >
+                            กรุณากรอกข้อมูลและกด "คำนวณ" เพื่อดูผลลัพธ์
+                        </div>
+
+                        <div class="chart-container">
+                            <canvas id="savingsChart" ></canvas>
+                        </div>
+                    </div>
+
+                    <div id="items" class="tab-content">
+                        <div id="itemsResult" class="comparison-result-black">
+                            <h2 style="font-size: 20px;font-weight: bold;color: #ca8d3d;">ค่าใช้จ่ายของครัวเรือน(เฉลี่ย)/เดือน</h2>
+                            <canvas id="barChart" style="margin-top: 20px;"></canvas>
+                            <a href="https://www.nso.go.th/public/e-book/Analytical-Reports/Income-2566/58/?fbclid=IwY2xjawIUB6BleHRuA2FlbQIxMAABHbBJ_nGhYwC0BLCMKM08kOsMifqwPWcUSORUm8sI0HKoR_blgP4P9TTkoQ_aem_hMEbd-7NJuve96GkxEY4Mg">ดูรายละเอียดเพิ่มเติมได้ที่นี่</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                const regionData = {
+                    "กทม. + 3 จังหวัด": `
+                        <p class="text-center bold text-red big-text"> กรุงเทพฯ, นนทบุรี, ปทุมธานี, สมุทรปราการ</p>
+                        <p class="text-center ">💰 ค่าใช้จ่ายเฉลี่ย: <span class="bold">32,096</span> บาท/เดือน</p>
+                        <p class="text-mini">🛒 ค่าใช้จ่ายเพื่อการอุปโภคบริโภค: <span class="bold">27,899</span> บาท </p>
+                        <p class="text-mini">🏦 ค่าใช้จ่ายนอกจากการอุปโภคบริโภค: <span class="bold">4,197</span> บาท </p>
+                    `,
+
+                    "ภาคกลาง": `
+                        <p class="text-center bold text-blue big-text"> จังหวัดในภาคกลาง</p>
+                        <p class="text-center ">💰 ค่าใช้จ่ายเฉลี่ย: <span class="bold">24,635</span> บาท/เดือน</p>
+                        <p class="text-mini">🛒 ค่าใช้จ่ายเพื่อการอุปโภคบริโภค: <span class="bold">21,134</span> บาท </p>
+                        <p class="text-mini">🏦 ค่าใช้จ่ายนอกจากการอุปโภคบริโภค: <span class="bold">3,501</span> บาท </p>
+                    `,
+
+                    "ภาคอีสาน": `
+                        <p class="text-center bold text-orange big-text"> จังหวัดในภาคอีสาน</p>
+                        <p class="text-center ">💰 ค่าใช้จ่ายเฉลี่ย: <span class="bold">18,676</span> บาท/เดือน</p>
+                        <p class="text-mini">🛒 ค่าใช้จ่ายเพื่อการอุปโภคบริโภค: <span class="bold">16,540</span> บาท </p>
+                        <p class="text-mini">🏦 ค่าใช้จ่ายนอกจากการอุปโภคบริโภค: <span class="bold">2,136</span> บาท </p>
+                    `,
+
+                    "ภาคใต้": `
+                        <p class="text-center bold text-purple big-text"> จังหวัดในภาคใต้</p>
+                        <p class="text-center ">💰 ค่าใช้จ่ายเฉลี่ย: <span class="bold">23,263</span> บาท/เดือน</p>
+                        <p class="text-mini">🛒 ค่าใช้จ่ายเพื่อการอุปโภคบริโภค: <span class="bold">20,149</span> บาท </p>
+                        <p class="text-mini">🏦 ค่าใช้จ่ายนอกจากการอุปโภคบริโภค: <span class="bold">3,114</span> บาท </p>
+                    `,
+
+                    "ภาคเหนือ": `
+                        <p class="text-center bold text-green big-text"> จังหวัดในภาคเหนือ</p>
+                        <p class="text-center ">💰 ค่าใช้จ่ายเฉลี่ย: <span class="bold">18,961</span> บาท/เดือน</p>
+                        <p class="text-mini">🛒 ค่าใช้จ่ายเพื่อการอุปโภคบริโภค: <span class="bold">16,768</span> บาท </p>
+                        <p class="text-mini">🏦 ค่าใช้จ่ายนอกจากการอุปโภคบริโภค: <span class="bold">2,193</span> บาท </p>
+                    `
+                };
+
+
+
+            // ฟังก์ชันเปลี่ยนข้อความและเพิ่มแอนิเมชัน
+            function showResult(region) {
+                const resultBox = document.getElementById("resultdata");
+                resultBox.innerHTML = regionData[region];
+
+                // เพิ่มแอนิเมชันให้ข้อความค่อยๆ โผล่ออกมา
+                resultBox.classList.remove("show");
+                setTimeout(() => resultBox.classList.add("show"), 50);
+            }
+
+            // เพิ่ม Event Listener ให้ปุ่มกด
+            document.querySelectorAll('.step').forEach(step => {
+                step.addEventListener('click', function() {
+                    document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+                    this.classList.add('active');
+                    showResult(this.getAttribute("data-region"));
+                });
+            });
+    </script>
+
+            <script>
+                function formatNumber(input) {
+                let value = input.value.replace(/,/g, ''); // Remove commas
+                    if (!isNaN(value)) {
+                    input.value = Number(value).toLocaleString(); // Add commas
+                    }
+                }
+            </script>
+
+            <script>
+                function showTab(tabName) {
+                    // ซ่อนทุกแท็บ
+                    var contents = document.querySelectorAll('.tab-content');
+                    contents.forEach(function(content) {
+                        content.classList.remove('active');
+                    });
+                    
+                    // ลบคลาส active จากทุกแท็บ
+                    var tabs = document.querySelectorAll('.tab');
+                    tabs.forEach(function(tab) {
+                        tab.classList.remove('active');
+                    });
+                
+                    // แสดงแท็บที่ถูกเลือก
+                    var activeTab = document.getElementById(tabName);
+                    activeTab.classList.add('active');
+                    
+                    // ทำให้แท็บที่เลือกมีคลาส active
+                    var activeTabElement = document.querySelector('.tab[onclick="showTab(\'' + tabName + '\')"]');
+                    activeTabElement.classList.add('active');
+                }
+                </script>
+
+            <script>
+                function toggleFixDiv() {
+                var selectValue = document.getElementById('fixornot').value;
+                var fixDiv = document.getElementById('fix');
+                var notFixDiv = document.getElementById('notfix');
+                var noDiv = document.getElementById('no');
+                
+                if (selectValue === 'fix') {
+                    fixDiv.style.display = 'block';  // แสดง div สำหรับการเลือกภูมิภาค
+                    notFixDiv.style.display = 'none';
+                    noDiv.style.display = 'none'; 
+                } else if (selectValue === 'notfix') {
+                    notFixDiv.style.display = 'block'; // แสดง div สำหรับกรอกค่าใช้จ่ายอิสระ
+                    fixDiv.style.display = 'none'; 
+                    noDiv.style.display = 'none';   
+                } else if (selectValue === 'no') {
+                    noDiv.style.display =  'block';   // แสดง div สำหรับไม่กรอก
+                    notFixDiv.style.display = 'none'; 
+                    fixDiv.style.display = 'none';    
+                } else {
+                    fixDiv.style.display = 'none';    // ซ่อน div ทั้งหมด
+                    notFixDiv.style.display = 'none'; 
+                }
+            }
+            </script>
+            
+            <script>
+                function validateDecimalInput(input, min, max) {
+                let value = parseInt(input.value);
+                
+                if (isNaN(value)) {
+                    input.value = "";
+                    return;
+                }
+
+                if (value < min) {
+                    input.value = min;
+                } else if (value > max) {
+                    input.value = max;
+                }
+            }
+
+            function validateYearsRemain(input) {
+                let startYear = parseInt(document.getElementById('yearsfrist').value);
+                let retireYear = parseInt(input.value);
+
+                if (isNaN(retireYear)) {
+                    return; // อนุญาตให้ลบค่าได้
+                }
+
+                if (retireYear > 99) {
+                    input.value = 99;
+                } else if (input.value.length === 2) { // ถ้ากรอกครบ 2 หลัก
+                    if (retireYear < startYear) {
+                        input.value = startYear; // เซ็ตค่าให้เท่ากับ yearsfrist
+                    }
+                }
+            }
+                
+        </script>
+
+
+        <script>
+        let chart;
+        function showTab(tabId) {
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+            document.querySelector(`#${tabId}`).classList.add('active');
+            document.querySelector(`.tab[onclick="showTab('${tabId}')"]`).classList.add('active');
+        }
+        
+        function calculateSavings() {
+            const monthlySavings = parseFloat(document.getElementById('monthlySavings').value.replace(/,/g, '')) || 0;
+            const yearsfrist = parseFloat(document.getElementById('yearsfrist').value) || 0;
+            const yearsremain = parseFloat(document.getElementById('yearsremain').value) || 0;
+            const interestRate = parseFloat(document.getElementById('interestRate').value) || 0;
+            const inflationRate = parseFloat(document.getElementById('inflationRate').value) || 0;
+            const comparison = document.getElementById('comparisonSelect').value;
+            const comparisonUnitimput = document.getElementById('comparisonUnitimput').value;
+            const selectedRegion = document.querySelector('.step.active');  // ตรวจสอบภูมิภาคที่เลือก
+            const inputExpense = parseFloat(document.getElementById('monthly-expense').value) || 0;  // ค่าใช้จ่ายที่กรอกเอง
+            const resultBox = document.getElementById("resultdata");
+            const annualSavings = monthlySavings * 12;
+            let totalSavings = 0;
+            const savingsOverTime = [];
+            const inflationAdjustedSavings = [];
+            const comparisonPrices = [];
+            const showmoneyleft = [];
+            const moneyadd = [];
+            const years = yearsremain - yearsfrist;
+            const result = document.getElementById('result');
+            const showexpense = [] ;
+            const fixornot = document.getElementById("fixornot").value;
+
+            if (monthlySavings === 0 || yearsremain === 0 || yearsfrist === 0 || interestRate === 0) {
+        document.getElementById('result').innerHTML = '<p style="color: red;">กรุณากรอกข้อมูลให้ครบถ้วน</p>';
+        return;
+    }
+            let showmoney = 0;
+            let money = 0;
+            for (let i = 1; i <= years; i++) {
+                money = annualSavings*i;
+                showmoney =  money * Math.pow(1 - inflationRate / 100, i);
+                showmoneyleft.push(showmoney); 
+                moneyadd.push(money);
+            }
+            
+            let adjustedSavings = 0 ;
+            for (let i = 1; i <= years; i++) {
+                 //ยอดการออม = ยอดการออม + การออมรายปี
+                totalSavings += annualSavings;
+                //ยอดการออม = ยอดการออม + (ยอดการออม*อัตราดอกเบี้ย/100)
+                totalSavings += (totalSavings * (interestRate / 100));
+                adjustedSavings = totalSavings * Math.pow(1 - inflationRate / 100 , i);
+
+                savingsOverTime.push(totalSavings);
+                
+                inflationAdjustedSavings.push(adjustedSavings);
+            }
+            
+            
+
+            
+            for (let i = 1; i <= years; i++) {
+            let showfood = comparisonUnitimput * Math.pow( 1 + inflationRate / 100, i);
+            let comparisonText = '';
+            
+            if (comparison === 'meal') {
+                comparisonText = 'มื้ออาหาร';
+            } else if (comparison === 'coffee') {
+                
+                comparisonText = 'แก้วกาแฟ';
+            } else if (comparison === 'movie') {
+                
+                comparisonText = 'ตั๋วหนัง';
+            } else if (comparison === 'boxRice') {
+                
+                comparisonText = 'ข้าวกล่อง';
+            } else if (comparison === 'soda') {
+                
+                comparisonText = 'น้ำอัดลม';
+            }
+            comparisonPrices.push(showfood);
+        }
+
+            let showfood = comparisonUnitimput* Math.pow(1 + inflationRate / 100, years);
+            let comparisonText = '';
+            if (comparison === 'meal') {
+                
+                comparisonText = 'มื้ออาหาร';
+            } else if (comparison === 'coffee') {
+
+                comparisonText = 'แก้วกาแฟ';
+            } else if (comparison === 'movie') {
+                
+                comparisonText = 'ตั๋วหนัง';
+            } else if (comparison === 'boxRice') {
+                
+                comparisonText = 'ข้าวกล่อง';
+            } else if (comparison === 'soda') {
+                
+                comparisonText = 'น้ำอัดลม';
+            }
+
+            console.log(comparisonText);
+            const show =  `ราคา ${comparisonText} (บาท)`;
+
+            const showother =  ` ${comparisonText} (ราคา:  <span class="money-highlight">${showfood.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} </span> บาท) (เมื่อผ่านไป ${years } ปี )`;
+            
+            let moneyuse ='';
+            let moneynosafe = '';
+            let expenseftt = '';
+            if (selectedRegion) {
+            const region = selectedRegion.getAttribute("data-region");
+            const regionExpenses = {
+                "กทม. + 3 จังหวัด": 32096,
+                "ภาคกลาง": 24635,
+                "ภาคอีสาน": 18676,
+                "ภาคใต้": 23263,
+                "ภาคเหนือ": 18961,
+            };
+            
+            let expensesft = 0 ;
+            const avgExpense = regionExpenses[region];
+            const totalExpense = avgExpense * 12 ;
+            for (let i = 1; i <= years; i++) {
+            expensesft = avgExpense*Math.pow( 1 + 5/100, i);
+            showexpense.push(expensesft);
+            
+            }
+            expenseftt  = `ค่าใช้จ่ายเฉลี่ยใน<span style="font-weight: bold;">${region}</span>คือ: <span style="color: red; font-weight: bold;"> ${avgExpense.toLocaleString()} </span> บาท/เดือน  <br>  <br>(เมื่อผ่านไป ${years} ปี ค่าใช้จ่ายจะอยู่ที่(ประมาณ) :  <span class="money-highlight">${expensesft.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} </span> บาท/เดือน) </p>`;
+            moneyuse =  adjustedSavings / (expensesft*12); 
+            moneynosafe =  showmoney / (expensesft*12); 
+        } else if (inputExpense > 0) {
+            let expensesft = 0 ;
+            for (let i = 1; i <= years; i++) {
+            expensesft = inputExpense*Math.pow( 1 + 5/100, i);
+            showexpense.push(expensesft);
+            
+            }
+            expenseftt = `ค่าใช้จ่ายที่กรอก: ${inputExpense.toLocaleString()} บาท/เดือน<br>`;
+            moneyuse =  adjustedSavings / (expensesft*12); 
+            moneynosafe =  showmoney / (expensesft*12); 
+            result.innerHTML += `กรุณาเลือกภูมิภาคเพื่อเปรียบเทียบค่าใช้จ่าย`;
+        } else {
+            moneyuse =  0; 
+            moneynosafe =  0 ;
+        }
+        
+                if (fixornot !== 'no') { // แสดงผลลัพธ์เมื่อไม่เลือก "no"
+                    document.getElementById('result').innerHTML = `
+                        <p>เริ่มออมอายุ : ${yearsfrist} - ${yearsremain} ปี เป็นระยะเวลาทั้งหมด :  <span class="money-highlight">${years} </span> ปี</p>
+                        <p> ${showother} </p>
+                        <p>เงินที่ออม : <span class="money-highlight"> ${money.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} </span>  บาท</p>
+                        <p>มูลค่าจริงของเงินออม :  <span class="money-highlight">${showmoney.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} </span>  บาท</p>
+                        <p>เงินที่ออม (รวมดอกเบี้ย):  <span class="money-highlight">${totalSavings.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} </span>  บาท</p>
+                        <p>มูลค่าที่จริงของเงินออม (รวมดอกเบี้ย):  <span class="money-highlight">${adjustedSavings.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} </span>  บาท </p>
+                        <p> ${expenseftt} </p>
+                        
+                        <p> ถ้าออมเงินจะอยู่ได้อีกไม่เกิน : <span class="money-highlight">${moneyuse.toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</span> ปี(หลังเกษียณ)</p>
+                        <p> ถ้า<span style="color:red;">ไม่ออม</span>เงินจะอยู่ได้อีกไม่เกิน : <span class="money-highlight">${moneynosafe.toFixed(1).replace(/\d(?=(\d{3})+\.)/g, '$&,')}</span> ปี(หลังเกษียณ)</p>
+            
+                    `;
+                }else{
+                    document.getElementById('result').innerHTML = `
+                        <p>เริ่มออมอายุ : ${yearsfrist} - ${yearsremain} ปี เป็นระยะเวลาทั้งหมด :  <span class="money-highlight">${years} </span> ปี</p>
+                        <p> ${showother} </p>
+                        <p>เงินที่ออม : <span class="money-highlight"> ${money.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} </span>  บาท</p>
+                        <p>มูลค่าจริงของเงินออม :  <span class="money-highlight">${showmoney.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} </span>  บาท</p>
+                        <p>เงินที่ออม (รวมดอกเบี้ย):  <span class="money-highlight">${totalSavings.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} </span>  บาท</p>
+                        <p>มูลค่าที่จริงของเงินออม (รวมดอกเบี้ย):  <span class="money-highlight">${adjustedSavings.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')} </span>  บาท </p>
+                        <p> ${expenseftt} </p>
+                        
+                        
+                    `;
+                }
+        
+        
+        if (chart) chart.destroy();
+        const ctx = document.getElementById('savingsChart').getContext('2d');
+    
+        chart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: Array.from({ length: years }, (_, i) => `ปี ${i + 1}`),
+                datasets: [
+                {
+                        label: 'เงินออม (บาท)',
+                        data: moneyadd,
+                        borderColor: '#FF69B4',
+                        borderWidth: 2,
+                        pointRadius: 1, 
+                        fill: false
+                    },
+                    {
+                        label: 'มูลค่าจริงของเงินออม (บาท)',
+                        data:  showmoneyleft,
+                        borderColor: '#7CFC00',
+                        borderWidth: 2,
+                        pointRadius: 1, 
+                        fill: false
+                    },
+                    {
+                        label: 'เงินออม (รวมดอกเบี้ย)',
+                        data: savingsOverTime,
+                        borderColor: '#4B0082',
+                        borderWidth: 2,
+                        pointRadius: 1, 
+                        fill: false
+                    },
+                    {
+                        label: 'มูลค่าจริงของเงินออม (รวมดอกเบี้ย)',
+                        data: inflationAdjustedSavings,
+                        borderColor: '#008000',
+                        borderWidth: 2,
+                        pointRadius: 1, 
+                        fill: false
+                    },{
+                        label: show,
+                        data: comparisonPrices,
+                        borderColor: '#CD5C5C',
+                        borderWidth: 2,
+                        pointRadius: 1, 
+                        fill: false,
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return tooltipItem.dataset.label + ': ' + tooltipItem.raw.toLocaleString() + ' บาท';
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'ปี'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'จำนวนเงิน (บาท)'
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+        </script>
+            <style>
+                .money-highlight {
+                color: blue;
+                font-weight: bold;
+                }
+            </style>
+
+<script>
+    const ctxy = document.getElementById('barChart').getContext('2d');
+
+    const barChart = new Chart(ctxy, {
+        type: 'bar',
+        data: {
+            labels: ['กทม.', 'ภาคกลาง', 'ภาคใต้', 'อีสาน', 'ภาคเหนือ'],
+            datasets: [{
+                label: 'ค่าใช้จ่าย (บาท/เดือน)',
+                data: [32096, 24635, 23263, 18676, 18961],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.8)',
+                    'rgba(54, 162, 235, 0.8)',
+                    'rgba(255, 206, 86, 0.8)',
+                    'rgba(75, 192, 192, 0.8)',
+                    'rgba(153, 102, 255, 0.8)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 0)',
+                    'rgba(54, 162, 235, 0)',
+                    'rgba(255, 206, 86, 0)',
+                    'rgba(75, 192, 192, 0)',
+                    'rgba(153, 102, 255, 0)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            animation: {
+                    duration: 5000,
+                    easing: 'easeOutElastic'
+                },
+                animations: {
+                    x: { duration: 0 }, 
+                    y: { from: -15 } 
+                },
+            responsive: true,
+            plugins: {
+                legend: { display: false },
+                tooltip: { enabled: true },
+                datalabels: {
+                    anchor: 'end',
+                    align: 'top',
+                    formatter: (value) => value.toLocaleString(), // แสดงค่าบนแท่ง
+                    font: { weight: 'bold', size: 14 }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    suggestedMax: 45000, // กำหนดค่าสูงสุดให้พอดี
+                    ticks: { callback: (value) => value.toLocaleString() + ' บาท' }
+                }
+            }
+        },
+        plugins: [ChartDataLabels] // ต้องแน่ใจว่ามีการโหลด ChartDataLabels Plugin
+    });
+
+</script>
+    
+        <script>
+            document.querySelectorAll('.step').forEach(step => {
+            step.addEventListener('click', function() {
+                // เอาคลาส active ออกจากทุก step
+                document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+                // เพิ่มคลาส active ให้ step ที่ถูกกด
+                this.classList.add('active');
+            });
+        });
+        </script>
+
+    
+            <!-- Bootstrap JS, Popper.js, and jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.4.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
